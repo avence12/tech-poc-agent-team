@@ -1,0 +1,15 @@
+# Implementation ledger — 2026-10-05-agent-team
+
+Spec: DESIGN.md. User explicitly requested implementation after the design interview.
+
+- Ruling: execute in the scoped `agent-team/` folder and add only the Claude entry skill; preserve the existing workspace and leave Git state untouched. This is a portable operating package, not a change to the tracked application. Cost if wrong: installation path needs relocating.
+- Ruling: no additional plan-approval pause; the user already approved implementation. Cost if wrong: routine details can be revised from the delivered package.
+- Ruling: failed/interrupted B launches consume an execution slot; pending C reviews resume against saved B results. This prevents retries from exceeding three actual B attempts. Cost if wrong: fewer complete review rounds after infrastructure failures.
+- Ruling: final approval can explicitly acknowledge an inconclusive escalation; it remains labeled inconclusive and never claims convergence. Cost if wrong: the human must reopen research as a new decision unit.
+- Pre-flight: workflow and adapter share the invoke result contract; metrics derive from persisted approved timestamps, executed rounds and human records.
+- Implementation: executor, strict role contracts, isolated resumed Claude sessions, A/B/C prompts, report templates and the `/tech-poc` entry skill are present. Performance output has exactly the four agreed fields.
+- RED → GREEN: initial missing-executor tests failed, then passed. Regression tests reproduced feedback loss after a failed B attempt and inability to return a final report for correction; both were fixed without resetting the attempt count.
+- Independent development review: one read-only reviewer reproduced three issues: a committed result could skip a pending human gate after interruption; finish could approve a report after brief drift; cost-accounting helper models could cause a false independence failure. Each received failing regression coverage before its fix. No second review loop was requested or run.
+- Fixes: persist human-required status with the result before writing report artifacts; check frozen brief hash before either form of final approval; read actual top-level assistant `message.model` values from stream-json and retain aggregate modelUsage only in raw diagnostics. Main-model fallback overlap and missing model metadata stop execution.
+- Verification: `python3 -m unittest discover -s agent-team/tests -v` passed 30 tests (12.301s); Python compileall and executor help passed. Installed Claude Code 2.1.233 exposes the required executor flags. The documented init/prepare/approve/run/human-add/defect/finish path passed with the fake CLI in `/private/tmp/agent-team-smoke-vg3fnaq2`.
+- Limit: all workflow tests used a fake CLI; no paid/live LLM calls were made. Authentication, provider responses, real research quality and project tool permissions require the first actual research unit. This implementation does not claim measured speed improvements.

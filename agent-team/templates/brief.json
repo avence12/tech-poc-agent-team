@@ -1,0 +1,13 @@
+{
+  "question": "Can the candidate solution integrate with the target system under the required constraints?",
+  "scope": "One technical integration question; specify the components and target environment before starting.",
+  "acceptance_criteria": [
+    {
+      "id": "AC1",
+      "description": "Provide a reproducible integration observation and compare it with the stated adoption/elimination threshold. Replace this with the actual measurement and threshold."
+    }
+  ],
+  "constraints": [],
+  "architecture_facts": [],
+  "allowed_commands": []
+}
