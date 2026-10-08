@@ -1,14 +1,14 @@
-# IC Technical Survey / PoC Agent Team
+# Technical Survey / PoC Agent Team
 
 在 Claude Code 輸入 `/tech-poc <技術問題>`，啟動 A/B/C 協作。
 每次處理一個可決策的技術問題；適用於 Web Application 與 CCTV 邊緣 AI。
 
-| 角色 | 預設模型 | 工作 |
-|---|---|---|
-| A | Opus | 架構、impact、方案分析；修正假設；整合主管報告 |
-| B | Opus | 最小 PoC／實驗、可重現證據、方案 pros/cons |
-| C | Sonnet | 獨立驗證案例、每輪 review、證據缺口與修正要求 |
-| Human | — | decomposition、核定問題／門檻、衝突裁決、final review |
+| 角色 | 工作 |
+|---|---|
+| A | 架構、impact、方案分析；修正假設；整合主管報告 |
+| B | 最小 PoC／實驗、可重現證據、方案 pros/cons |
+| C | 獨立驗證案例、每輪 review、證據缺口與修正要求 |
+| Human | decomposition、核定問題／門檻、衝突裁決、final review |
 
 ## 使用前
 
@@ -17,7 +17,7 @@
   `.claude/skills/tech-poc/SKILL.md`。既有專案或全域 Claude 設定不需修改。
 - Claude Code skills：[官方文件](https://code.claude.com/docs/en/skills)。
   CLI JSON、schema、session resume：[官方文件](https://code.claude.com/docs/en/headless)。
-- 本套件透過獨立 `claude -p` sessions 執行角色；不需開啟原生 Agent Teams。
+- 目前執行器透過獨立 `claude -p` sessions 執行角色；不需開啟原生 Agent Teams。
   每個角色保留自己的 session；C 的實際模型不得與 A/B 重疊。
   CLI 原始輸出保留 token 用量，正式績效仍只有四項。
   續接 session 的 CLI 費用統計會包含先前用量，請比較各角色最新紀錄，避免逐次加總累計值。
@@ -71,7 +71,7 @@ python3 agent-team/team.py status --run agent-team/runs/my-question
 
 `init` 是正式交付題目的計時起點；`prepare` 會呼叫 A 並消耗 Claude tokens。
 `approve` 是人的初始核定；模型的任何文字都不會自動批准。
-模型可在 `init` 用 `--model-a opus --model-b opus --model-c sonnet` 指定其他
+模型可在 `init` 用 `--model-a`、`--model-b`、`--model-c` 指定 CLI 支援的
 alias 或完整 model ID。實際模型 ID 從 CLI stream 中的主 session assistant
 `message.model` 驗證；缺少 metadata 或 C 與 A/B 重疊就停止，也會檢查中途
 fallback。`modelUsage` 只作用量診斷，避免把共用的輔助模型誤認為角色模型。
